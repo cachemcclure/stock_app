@@ -1,0 +1,8 @@
+bin/*
+include/*
+lib/*
+.idea/*
+pyvenv.cfg
+*.pkl
+*.txt
+.DS_Store
