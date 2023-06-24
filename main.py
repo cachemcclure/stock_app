@@ -10,7 +10,7 @@ import pywt
 
 
 CALLS = 5
-RATE_LIMIT = 65
+RATE_LIMIT = 61
 
 
 class PolygonRequest:
