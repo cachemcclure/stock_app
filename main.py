@@ -76,7 +76,7 @@ class PolygonRequest:
             "ERROR: Polygon API error - Previous Day Open/Close. Please see log file."
         )
         out = self.__send_request(ep=ep, error_msg=error_msg)
-        return
+        return out
 
     def get_all_historical_open_close(self, ticker: str):
         out = []
