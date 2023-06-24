@@ -97,6 +97,24 @@ class PolygonRequest:
         out = self.__send_request(ep=ep, error_msg=error_msg)
         return out
 
+    def get_snapshot(self):
+        ep = "/v2/snapshot/locale/us/markets/stocks/tickers"
+        error_msg = "ERROR: Polygon API error - Snapshot. Please see log file."
+        out = self.__send_request(ep=ep, error_msg=error_msg)
+        return out
+
+    def get_gainers(self):
+        ep = "/v2/snapshot/locale/us/markets/stocks/gainers"
+        error_msg = "ERROR: Polygon API error - Gainers. Please see log file."
+        out = self.__send_request(ep=ep, error_msg=error_msg)
+        return out
+
+    def get_losers(self):
+        ep = "/v2/snapshot/locale/us/markets/stocks/losers"
+        error_msg = "ERROR: Polygon API error - Losers. Please see log file."
+        out = self.__send_request(ep=ep, error_msg=error_msg)
+        return out
+
 
 class SignalAnalysis:
     def __init__(self):
