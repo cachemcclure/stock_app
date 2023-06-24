@@ -4,5 +4,5 @@ lib/*
 .idea/*
 pyvenv.cfg
 *.pkl
-*.txt
+*logs.txt
 .DS_Store
