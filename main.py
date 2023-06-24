@@ -89,6 +89,14 @@ class PolygonRequest:
         json.dump({"data": out}, open(f"cached_history/{ticker}.dat", "w"))
         return out
 
+    def get_recent_trades(self, ticker: str, limit: int = None):
+        ep = f"/v3/trades/{ticker}"
+        if limit is not None:
+            ep += f"?limit={limit}"
+        error_msg = "ERROR: Polygon API error - Recent Trades. Please see log file."
+        out = self.__send_request(ep=ep, error_msg=error_msg)
+        return out
+
 
 class SignalAnalysis:
     def __init__(self):
