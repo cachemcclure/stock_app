@@ -3,3 +3,4 @@ numpy>=1.25.0
 PyWavelets>=1.4.1
 requests>=2.31.0
 scipy>=1.10.1
+ratelimit>=2.2.1

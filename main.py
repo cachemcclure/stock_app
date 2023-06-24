@@ -3,9 +3,14 @@ import requests
 from os.path import exists
 from datetime import date, datetime, timedelta
 import json
+from ratelimit import limits, sleep_and_retry
 import matplotlib.pyplot as plt
 from scipy import signal
 import pywt
+
+
+CALLS = 5
+RATE_LIMIT = 65
 
 
 class PolygonRequest:
@@ -38,6 +43,7 @@ class PolygonRequest:
         return header
 
     def __send_request(self, ep: str, error_msg: str):
+        check_limit()
         url = f"{self.__base_ep}{ep}"
         response = requests.get(url=url, headers=self.__header)
         try:
@@ -85,8 +91,8 @@ class PolygonRequest:
         out = []
         for xx in range(date_diff):
             ref_date = datetime.today() - timedelta(days=date_diff - xx)
-            out += self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)
-        json.dump({"data": out}, open(f"cached_history/{ticker}.dat", "w"))
+            out += [self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)]
+        json.dump({"data": out}, open(f"cached_history/{ticker}.json", "w"))
         return out
 
     def get_recent_trades(self, ticker: str, limit: int = None):
@@ -154,6 +160,12 @@ class SignalAnalysis:
         return
 
 
+@sleep_and_retry
+@limits(calls=CALLS, period=RATE_LIMIT)
+def check_limit():
+    return
+
+
 def log_handling(log_level: str = "ERROR", msg: str = "", log_file: str = "logs.txt"):
     out = f"{datetime.now()}: {log_level} - {msg}\n"
     with open(log_file, "a") as f:
@@ -172,6 +184,8 @@ def test():
             ticker=ticker, ref_date=datetime.strptime(test_date, "%Y-%m-%d").date()
         )
     )
+    out = test_class.get_all_historical_open_close(ticker=ticker, date_diff=50)
+    print(out[0])
 
 
 if __name__ == "__main__":
