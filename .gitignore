@@ -6,3 +6,4 @@ pyvenv.cfg
 *.pkl
 *logs.txt
 .DS_Store
+share/*

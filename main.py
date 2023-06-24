@@ -3,6 +3,9 @@ import requests
 from os.path import exists
 from datetime import date, datetime, timedelta
 import json
+import matplotlib.pyplot as plt
+from scipy import signal
+import pywt
 
 
 class PolygonRequest:
