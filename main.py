@@ -7,6 +7,12 @@ from ratelimit import limits, sleep_and_retry
 import matplotlib.pyplot as plt
 from scipy import signal
 import pywt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import LSTM
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_squared_error
 
 
 CALLS = 5
@@ -158,6 +164,11 @@ class SignalAnalysis:
 
     def plot_dwpt_analysis(self):
         # TODO: add plotting function for discrete wavelet packet transform analysis
+        return
+
+
+class ModelGeneration:
+    def __init__(self):
         return
 
 

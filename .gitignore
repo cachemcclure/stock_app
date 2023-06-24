@@ -7,3 +7,5 @@ pyvenv.cfg
 *logs.txt
 .DS_Store
 share/*
+cached_history/*
+plots/*
