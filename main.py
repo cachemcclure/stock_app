@@ -6,6 +6,7 @@ import json
 from ratelimit import limits, sleep_and_retry
 from time import sleep
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy import signal
 import pywt
 import tensorflow as tf
@@ -178,6 +179,7 @@ class PolygonRequest:
 
 class SignalAnalysis:
     def __init__(self):
+        self.__analysis_dataset = None
         self.__log_file = "analysis_logs.txt"
         log_handling(
             log_level="INFO",
@@ -185,7 +187,54 @@ class SignalAnalysis:
             log_file=self.__log_file,
         )
 
-    def analyze_historical_ticker(self):
+    @property
+    def analysis_dataset(self):
+        return self.__analysis_dataset
+
+    @analysis_dataset.setter
+    def analysis_dataset(self, dataset: list):
+        self.__analysis_dataset = dataset
+
+    def extract_dataset_from_ticker(self, ticker: str, ticker_key: str):
+        if exists(f"cached_history/{ticker}.json"):
+            self.__analysis_dataset = self.extract_from_ticker_data(
+                ticker_key=ticker_key,
+                dataset=json.load(open(f"cached_history/{ticker}.json", "r"))["data"],
+            )
+        else:
+            stock_class = PolygonRequest()
+            temp = stock_class.get_all_historical_open_close(
+                ticker=ticker, date_diff=730
+            )
+            self.__analysis_dataset = self.extract_from_ticker_data(
+                ticker_key=ticker_key, dataset=temp
+            )
+        return
+
+    def extract_from_ticker_data(self, ticker_key: str, dataset: list):
+        available_keys = [
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "afterHours",
+            "preMarket",
+        ]
+        if ticker_key not in available_keys:
+            log_handling(
+                log_level="ERROR",
+                msg="ERROR: Signal Analysis - Extract from Ticker Data. Please see log files.",
+                log_file=self.__log_file,
+            )
+            out = []
+        else:
+            out = [xx[ticker_key] for xx in dataset]
+        return out
+
+    def analyze_historical_ticker(self, analysis: str):
+        if self.__analysis_dataset is not None:
+            xyz = 0
         # TODO: add handler for analysis
         return
 
