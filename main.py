@@ -1,9 +1,9 @@
+from utilities import check_limit, log_handling
 import pickle as pkl
 import requests
 from os.path import exists
 from datetime import date, datetime, timedelta
 import json
-from ratelimit import limits, sleep_and_retry
 from time import sleep
 import matplotlib.pyplot as plt
 import numpy as np
@@ -300,20 +300,6 @@ class ModelGeneration:
                 self.__dataset[train_size:, :],
             )
         return
-
-
-@sleep_and_retry
-@limits(calls=CALLS, period=RATE_LIMIT)
-def check_limit():
-    return
-
-
-def log_handling(log_level: str = "ERROR", msg: str = "", log_file: str = "logs.txt"):
-    out = f"{datetime.now()}: {log_level} - {msg}\n"
-    with open(log_file, "a") as f:
-        f.write(out)
-    with open("master_logs.txt", "a") as f:
-        f.write(out)
 
 
 def test():
