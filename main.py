@@ -4,6 +4,7 @@ from os.path import exists
 from datetime import date, datetime, timedelta
 import json
 from ratelimit import limits, sleep_and_retry
+from time import sleep
 import matplotlib.pyplot as plt
 from scipy import signal
 import pywt
@@ -54,11 +55,39 @@ class PolygonRequest:
         response = requests.get(url=url, headers=self.__header)
         try:
             out = response.json()
-            log_handling(
-                log_level="INFO",
-                msg=f"Request successfully submitted to {ep}",
-                log_file=self.__log_file,
-            )
+            if "status" in out:
+                if out["status"] == "OK":
+                    log_handling(
+                        log_level="INFO",
+                        msg=f"Request successfully submitted to {ep}",
+                        log_file=self.__log_file,
+                    )
+                elif out["status"] == "NOT_FOUND":
+                    log_handling(
+                        log_level="WARNING",
+                        msg=f"Request returned no results for request {ep}",
+                        log_file=self.__log_file,
+                    )
+                else:
+                    sleep(60)
+                    out = self.__send_request(ep=ep, error_msg=error_msg)
+            elif "results" in out:
+                if "status" in out["results"]:
+                    if out["results"]["status"] == "OK":
+                        log_handling(
+                            log_level="INFO",
+                            msg=f"Request successfully submitted to {ep}",
+                            log_file=self.__log_file,
+                        )
+                    elif out["results"]["status"] == "NOT_FOUND":
+                        log_handling(
+                            log_level="WARNING",
+                            msg=f"Request returned no results for request {ep}",
+                            log_file=self.__log_file,
+                        )
+                    else:
+                        sleep(60)
+                        out = self.__send_request(ep=ep, error_msg=error_msg)
         except Exception as err:
             log_handling(log_level="ERROR", msg=str(err), log_file="polygon_logs.txt")
             print(error_msg)
@@ -98,7 +127,9 @@ class PolygonRequest:
         for xx in range(date_diff):
             ref_date = datetime.today() - timedelta(days=date_diff - xx)
             if ref_date.weekday() < 5:
-                out += [self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)]
+                temp = self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)
+                if temp["status"] == "OK":
+                    out += [temp]
         json.dump({"data": out}, open(f"cached_history/{ticker}.json", "w"))
         return out
 
@@ -169,6 +200,27 @@ class SignalAnalysis:
 
 class ModelGeneration:
     def __init__(self):
+        self.__dataset: list = None
+        return
+
+    @property
+    def model_dataset(self):
+        return self.__dataset
+
+    @model_dataset.setter
+    def model_dataset(self, dataset: list):
+        self.__dataset = dataset
+        return
+
+    def gen_train_test_sets(self, split: float):
+        if self.__dataset is None:
+            print("You must set a dataset before invoking this function")
+        else:
+            train_size = int(len(self.__dataset) * split)
+            self.__train, self.__test = (
+                self.__dataset[:train_size, :],
+                self.__dataset[train_size:, :],
+            )
         return
 
 
