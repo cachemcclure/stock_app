@@ -91,7 +91,8 @@ class PolygonRequest:
         out = []
         for xx in range(date_diff):
             ref_date = datetime.today() - timedelta(days=date_diff - xx)
-            out += [self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)]
+            if ref_date.weekday() < 5:
+                out += [self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)]
         json.dump({"data": out}, open(f"cached_history/{ticker}.json", "w"))
         return out
 
@@ -184,7 +185,7 @@ def test():
             ticker=ticker, ref_date=datetime.strptime(test_date, "%Y-%m-%d").date()
         )
     )
-    out = test_class.get_all_historical_open_close(ticker=ticker, date_diff=50)
+    out = test_class.get_all_historical_open_close(ticker=ticker, date_diff=730)
     print(out[0])
 
 
