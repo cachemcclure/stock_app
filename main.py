@@ -2,6 +2,7 @@ import pickle as pkl
 import requests
 from os.path import exists
 from datetime import date, datetime, timedelta
+import json
 
 
 class PolygonRequest:
@@ -13,8 +14,11 @@ class PolygonRequest:
             self.__api_key = input("Please enter your API key for Polygon: ")
             pkl.dump(self.__api_key, open("creds.pkl", "wb"))
         self.__header = self.__gen_header()
+        self.__log_file = "polygon_logs.txt"
         log_handling(
-            log_level="INFO", msg="Initialized class", log_file="polygon_logs.txt"
+            log_level="INFO",
+            msg="Initialized class for Polygon Request",
+            log_file=self.__log_file,
         )
 
     @property
@@ -38,7 +42,7 @@ class PolygonRequest:
             log_handling(
                 log_level="INFO",
                 msg=f"Request successfully submitted to {ep}",
-                log_file="polygon_logs.txt",
+                log_file=self.__log_file,
             )
         except Exception as err:
             log_handling(log_level="ERROR", msg=str(err), log_file="polygon_logs.txt")
@@ -79,12 +83,28 @@ class PolygonRequest:
         for xx in range(370):
             ref_date = datetime.today() - timedelta(days=370 - xx)
             out += self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)
+        json.dump({"data": out}, open(f"cached_history/{ticker}.dat", "w"))
         return out
+
+
+class WaveletAnalysis:
+    def __init__(self):
+        self.__log_file = "analysis_logs.txt"
+        log_handling(
+            log_level="INFO",
+            msg="Initialized class for Wavelet Analysis",
+            log_file=self.__log_file,
+        )
+
+    def analyze_historical_ticker(self):
+        return
 
 
 def log_handling(log_level: str = "ERROR", msg: str = "", log_file: str = "logs.txt"):
     out = f"{datetime.now()}: {log_level} - {msg}\n"
     with open(log_file, "a") as f:
+        f.write(out)
+    with open("master_logs.txt", "a") as f:
         f.write(out)
 
 
