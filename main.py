@@ -87,7 +87,7 @@ class PolygonRequest:
         return out
 
 
-class WaveletAnalysis:
+class SignalAnalysis:
     def __init__(self):
         self.__log_file = "analysis_logs.txt"
         log_handling(
@@ -97,6 +97,31 @@ class WaveletAnalysis:
         )
 
     def analyze_historical_ticker(self):
+        # TODO: add handler for analysis
+        return
+
+    def __fft_analysis(self):
+        # TODO: add fast fourier transform analysis
+        return
+
+    def __dwt_analysis(self):
+        # TODO: add discrete wavelet transform analysis
+        return
+
+    def __dwpt_analysis(self):
+        # TODO: add discrete wavelet packet transform analysis
+        return
+
+    def plot_fft_analysis(self):
+        # TODO: add plotting function for fast fourier transform analysis
+        return
+
+    def plot_dwt_analysis(self):
+        # TODO: add plotting function for discrete wavelet transform analysis
+        return
+
+    def plot_dwpt_analysis(self):
+        # TODO: add plotting function for discrete wavelet packet transform analysis
         return
 
 
