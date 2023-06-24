@@ -123,15 +123,31 @@ class PolygonRequest:
         return out
 
     def get_all_historical_open_close(self, ticker: str, date_diff: int = 370):
-        out = []
-        for xx in range(date_diff):
-            ref_date = datetime.today() - timedelta(days=date_diff - xx)
-            if ref_date.weekday() < 5:
-                temp = self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)
-                if temp["status"] == "OK":
-                    out += [temp]
-        json.dump({"data": out}, open(f"cached_history/{ticker}.json", "w"))
-        return out
+        if not exists(f"cached_history/{ticker}.json"):
+            out = []
+            for xx in range(date_diff):
+                ref_date = datetime.today() - timedelta(days=date_diff - xx)
+                if ref_date.weekday() < 5:
+                    temp = self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)
+                    if temp["status"] == "OK":
+                        out += [temp]
+            json.dump({"data": out}, open(f"cached_history/{ticker}.json", "w"))
+            return out
+        else:
+            out = json.load(open(f"cached_history/{ticker}.json", "w"))
+            store_date = datetime.strptime(out[-1]["from"], "%Y-%m-%d")
+            if store_date != datetime.today():
+                date_diff = abs((store_date - datetime.today()).days)
+                for xx in range(date_diff):
+                    ref_date = datetime.today() - timedelta(days=date_diff - xx)
+                    if ref_date.weekday() < 5:
+                        temp = self.get_ticker_open_close(
+                            ticker=ticker, ref_date=ref_date
+                        )
+                        if temp["status"] == "OK":
+                            out += [temp]
+                json.dump({"data": out}, open(f"cached_history/{ticker}.json", "w"))
+                return out
 
     def get_recent_trades(self, ticker: str, limit: int = None):
         ep = f"/v3/trades/{ticker}"
