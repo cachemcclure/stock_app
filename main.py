@@ -81,10 +81,10 @@ class PolygonRequest:
         out = self.__send_request(ep=ep, error_msg=error_msg)
         return out
 
-    def get_all_historical_open_close(self, ticker: str):
+    def get_all_historical_open_close(self, ticker: str, datediff: int = 370):
         out = []
-        for xx in range(370):
-            ref_date = datetime.today() - timedelta(days=370 - xx)
+        for xx in range(datediff):
+            ref_date = datetime.today() - timedelta(days=datediff - xx)
             out += self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)
         json.dump({"data": out}, open(f"cached_history/{ticker}.dat", "w"))
         return out
