@@ -200,7 +200,9 @@ class SignalAnalysis:
 
 class ModelGeneration:
     def __init__(self):
-        self.__dataset: list = None
+        self.__dataset = None
+        self.__train = None
+        self.__test = None
         return
 
     @property
@@ -210,6 +212,17 @@ class ModelGeneration:
     @model_dataset.setter
     def model_dataset(self, dataset: list):
         self.__dataset = dataset
+        return
+
+    def model_dataset_from_ticker(self, ticker: str):
+        if exists(f"cached_history/{ticker}.json"):
+            temp = json.load(open(f"cached_history/{ticker}.json", "r"))
+            self.__dataset = temp["data"]
+        else:
+            stock_class = PolygonRequest()
+            self.__dataset = stock_class.get_all_historical_open_close(
+                ticker=ticker, date_diff=730
+            )
         return
 
     def gen_train_test_sets(self, split: float):
