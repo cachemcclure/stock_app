@@ -1,8 +1,7 @@
 import pickle as pkl
 import requests
 from os.path import exists
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 
 class PolygonRequest:
@@ -65,6 +64,21 @@ class PolygonRequest:
         ep = f"/v1/open-close/{ticker}/{ref_date.strftime('%Y-%m-%d')}"
         error_msg = "ERROR: Polygon API error - Ticker Open/Close. Please see log file."
         out = self.__send_request(ep=ep, error_msg=error_msg)
+        return out
+
+    def get_yesterday_open_close(self, ticker: str):
+        ep = f"/v2/aggs/ticker/{ticker}/prev"
+        error_msg = (
+            "ERROR: Polygon API error - Previous Day Open/Close. Please see log file."
+        )
+        out = self.__send_request(ep=ep, error_msg=error_msg)
+        return
+
+    def get_all_historical_open_close(self, ticker: str):
+        out = []
+        for xx in range(370):
+            ref_date = datetime.today() - timedelta(days=370 - xx)
+            out += self.get_ticker_open_close(ticker=ticker, ref_date=ref_date)
         return out
 
 
