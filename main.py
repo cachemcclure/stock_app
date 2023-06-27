@@ -5,16 +5,6 @@ from os.path import exists
 from datetime import date, datetime, timedelta
 import json
 from time import sleep
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy import signal
-import pywt
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import LSTM
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
 
 
 CALLS = 5
