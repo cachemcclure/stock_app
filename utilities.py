@@ -1,5 +1,7 @@
 from ratelimit import limits, sleep_and_retry
 from datetime import datetime
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 CALLS = 5
@@ -18,3 +20,30 @@ def log_handling(log_level: str = "ERROR", msg: str = "", log_file: str = "logs.
         f.write(out)
     with open("master_logs.txt", "a") as f:
         f.write(out)
+
+
+def plot_data(
+    xx1: np.array,
+    yy1: np.array,
+    xx2: np.array = None,
+    yy2: np.array = None,
+    title: str = None,
+    xlabel: str = None,
+    ylabel: str = None,
+):
+    if (xx2 is None) and (yy2 is None):
+        plt.plot(xx1, yy1)
+    elif (xx2 is None) or (yy2 is None):
+        raise Exception("ERROR: both xx2 AND yy2 must be provided if one is")
+    else:
+        plt.plot(xx1, yy1)
+        plt.plot(xx2, yy2)
+    if not (title is None):
+        plt.title(title)
+    if not (xlabel is None):
+        plt.xlabel(xlabel)
+    if not (ylabel is None):
+        plt.ylabel(ylabel)
+    plt.grid()
+    plt.show()
+    return
