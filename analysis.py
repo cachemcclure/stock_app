@@ -15,23 +15,50 @@ from utilities import plot_data
 
 class BaseAnalysis(ABC):
     @abstractmethod
-    def __init__(self):
+    def __init__(self, **kwargs):
         pass
 
     @abstractmethod
-    def load_data(self, xx: np.array, yy: np.array):
+    def perform_analysis(self, **kwargs):
         pass
 
     @abstractmethod
-    def perform_analysis(self):
-        pass
-
-    @abstractmethod
-    def plot_analysis(self):
+    def plot_analysis(self, **kwargs):
         pass
 
 
 class FastFourierTransform(BaseAnalysis):
+    def __init__(self):
+        super().__init__()
+        return
+
+    def perform_analysis(
+        self, xx: np.array, yy: np.array, sample_points: int, sample_spacing: int
+    ):
+        yf = np.fft.fft(xx)
+        xf = np.fft.fftfreq(sample_points, sample_spacing)[: sample_points // 2]
+        return xf, yf
+
+    def plot_analysis(
+        self,
+        source_data_xx: np.array,
+        source_data_yy: np.array,
+        analyzed_data_xx: np.array,
+        analyzed_data_yy: np.array,
+    ):
+        plot_data(
+            xx1=source_data_xx,
+            yy1=source_data_yy,
+            xx2=analyzed_data_xx,
+            yy2=analyzed_data_yy,
+            title="FFT Analysis",
+            xlabel="Date",
+            ylabel="Stock Price",
+        )
+        return
+
+
+class SignalFiltering(BaseAnalysis):
     def __init__(self):
         super().__init__()
         return
