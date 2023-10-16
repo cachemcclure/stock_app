@@ -125,7 +125,7 @@ class PolygonRequest:
             json.dump({"data": out}, open(f"cached_history/{ticker}.json", "w"))
             return out
         else:
-            out = json.load(open(f"cached_history/{ticker}.json", "w"))
+            out = json.load(open(f"cached_history/{ticker}.json", "r"))
             store_date = datetime.strptime(out[-1]["from"], "%Y-%m-%d")
             if store_date != datetime.today():
                 date_diff = abs((store_date - datetime.today()).days)
