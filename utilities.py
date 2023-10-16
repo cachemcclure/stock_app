@@ -2,6 +2,7 @@ from ratelimit import limits, sleep_and_retry
 from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
+import pywt
 
 
 CALLS = 5
@@ -47,3 +48,11 @@ def plot_data(
     plt.grid()
     plt.show()
     return
+
+
+def low_pass_filter(signal, thresh=0.63, wavelet="db4"):
+    thresh = thresh * np.nanmax(signal)
+    coeff = pywt.wavedec(signal, wavelet, mode="per")
+    coeff[1:] = (pywt.threshold(i, value=thresh, mode="soft") for i in coeff[1:])
+    reconstructed_signal = pywt.waverec(coeff, wavelet, mode="per")
+    return reconstructed_signal

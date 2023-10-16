@@ -10,7 +10,7 @@ from tensorflow.python.keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 
-from utilities import plot_data
+from utilities import plot_data, low_pass_filter
 
 
 class BaseAnalysis(ABC):
@@ -24,6 +24,10 @@ class BaseAnalysis(ABC):
 
     @abstractmethod
     def plot_analysis(self, **kwargs):
+        pass
+
+    @abstractmethod
+    def filter_data(self, **kwargs):
         pass
 
 
@@ -57,6 +61,9 @@ class FastFourierTransform(BaseAnalysis):
         )
         return
 
+    def filter_data(self, ts_signal, threshold):
+        return
+
 
 class SignalFiltering(BaseAnalysis):
     def __init__(self):
@@ -70,6 +77,9 @@ class SignalFiltering(BaseAnalysis):
         return
 
     def plot_analysis(self):
+        return
+
+    def filter_data(self, ts_signal, threshold):
         return
 
 
@@ -87,6 +97,9 @@ class DiscreteWaveletTransform(BaseAnalysis):
     def plot_analysis(self):
         return
 
+    def filter_data(self, ts_signal, threshold):
+        return
+
 
 class DiscreteWaveletPacketTransform(BaseAnalysis):
     def __init__(self):
@@ -100,4 +113,7 @@ class DiscreteWaveletPacketTransform(BaseAnalysis):
         return
 
     def plot_analysis(self):
+        return
+
+    def filter_data(self, ts_signal, threshold):
         return
