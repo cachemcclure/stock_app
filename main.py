@@ -139,6 +139,8 @@ class PolygonRequest:
                             out += [temp]
                 json.dump({"data": out}, open(f"cached_history/{ticker}.json", "w"))
                 return out
+            else:
+                return None
 
     def get_recent_trades(self, ticker: str, limit: int = None):
         ep = f"/v3/trades/{ticker}"

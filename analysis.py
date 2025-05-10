@@ -3,10 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
 import pywt
-import tensorflow as tf
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense
-from tensorflow.python.keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 
